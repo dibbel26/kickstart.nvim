@@ -899,8 +899,6 @@ require('lazy').setup({
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
-  -- HACK: still weird
-
   { -- Collection of various small independent plugins/modules
     'nvim-mini/mini.nvim',
     config = function()
@@ -937,8 +935,41 @@ require('lazy').setup({
     end,
   },
 
+  --  { -- Highlight, edit, and navigate code
+  --    'nvim-treesitter/nvim-treesitter',
+  --    config = function()
+  --      local filetypes = {
+  --        'bash',
+  --        'c',
+  --        'cpp',
+  --        'diff',
+  --        'go',
+  --        'html',
+  --        'lua',
+  --        'luadoc',
+  --        'markdown',
+  --        'markdown_inline',
+  --        'python',
+  --        'query',
+  --        'rust',
+  --        'typst',
+  --        'java',
+  --        'julia',
+  --        'toml',
+  --        'vim',
+  --        'vimdoc',
+  --      }
+  --      require('nvim-treesitter').install(filetypes)
+  --      vim.api.nvim_create_autocmd('FileType', {
+  --        pattern = filetypes,
+  --        callback = function() vim.treesitter.start() end,
+  --      })
+  --    end,
+  --  },
+
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
+    branch = 'main',
     config = function()
       local filetypes = {
         'bash',
@@ -961,10 +992,15 @@ require('lazy').setup({
         'vim',
         'vimdoc',
       }
+      -- Tell Tree-sitter to use git instead of curl/tar
+      require('nvim-treesitter.install').prefer_git = true
+
       require('nvim-treesitter').install(filetypes)
+
+      -- Delay the start to avoid the "Parser could not be created" error
       vim.api.nvim_create_autocmd('FileType', {
         pattern = filetypes,
-        callback = function() vim.treesitter.start() end,
+        callback = function(args) pcall(vim.treesitter.start, args.buf) end,
       })
     end,
   },
@@ -1018,13 +1054,13 @@ require('lazy').setup({
 })
 
 -- Typst specific folding
-vim.api.nvim_create_autocmd('FileType', {
-  pattern = 'typst',
-  callback = function()
-    vim.wo.foldmethod = 'marker'
-    vim.wo.foldexpr = ''
-  end,
-})
+--vim.api.nvim_create_autocmd('FileType', {
+--  pattern = 'typst',
+--  callback = function()
+--    vim.wo.foldmethod = 'marker'
+--    vim.wo.foldexpr = ''
+--  end,
+--})
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
