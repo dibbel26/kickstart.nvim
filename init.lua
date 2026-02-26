@@ -708,20 +708,21 @@ require('lazy').setup({
     },
     opts = {
       notify_on_error = false,
-      format_on_save = function(bufnr)
-        -- Disable "format_on_save lsp_fallback" for languages that don't
-        -- have a well standardized coding style. You can add additional
-        -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true }
-        if disable_filetypes[vim.bo[bufnr].filetype] then
-          return nil
-        else
-          return {
-            timeout_ms = 500,
-            lsp_format = 'fallback',
-          }
-        end
-      end,
+      --      format_on_save = function(bufnr)
+      --        -- Disable "format_on_save lsp_fallback" for languages that don't
+      --        -- have a well standardized coding style. You can add additional
+      --        -- languages here or re-enable it for the disabled ones.
+      --        local disable_filetypes = { c = true, cpp = true }
+      --        if disable_filetypes[vim.bo[bufnr].filetype] then
+      --          return nil
+      --        else
+      --          return {
+      --            timeout_ms = 500,
+      --            lsp_format = 'fallback',
+      --          }
+      --        end
+      --      end,
+      format_on_save = false,
       formatters_by_ft = {
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
@@ -935,8 +936,26 @@ require('lazy').setup({
     end,
   },
 
+  {
+    'nvim-treesitter/nvim-treesitter',
+    config = function()
+      local filetypes = {
+        'bash', 'c', 'cpp', 'diff', 'go', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline',
+        'python', 'query', 'rust', 'typst', 'java', 'julia', 'toml', 'vim', 'vimdoc',
+      }
+      require('nvim-treesitter').install(filetypes)
+      vim.api.nvim_create_autocmd('FileType', {
+        pattern = filetypes,
+        callback = function() vim.treesitter.start() end,
+      })
+    end,
+  },
+
   --  { -- Highlight, edit, and navigate code
   --    'nvim-treesitter/nvim-treesitter',
+  --    branch = 'main',
+  --    lazy = false,
+  --    build = ':TSUpdate',
   --    config = function()
   --      local filetypes = {
   --        'bash',
@@ -959,51 +978,18 @@ require('lazy').setup({
   --        'vim',
   --        'vimdoc',
   --      }
+  --      -- Tell Tree-sitter to use git instead of curl/tar
+  --      -- require('nvim-treesitter.install').prefer_git = true -- prefer git only when old master branch
+  --
   --      require('nvim-treesitter').install(filetypes)
+  --
+  --      -- Delay the start to avoid the "Parser could not be created" error
   --      vim.api.nvim_create_autocmd('FileType', {
   --        pattern = filetypes,
-  --        callback = function() vim.treesitter.start() end,
+  --        callback = function(args) pcall(vim.treesitter.start, args.buf) end,
   --      })
   --    end,
   --  },
-
-  { -- Highlight, edit, and navigate code
-    'nvim-treesitter/nvim-treesitter',
-    branch = 'main',
-    config = function()
-      local filetypes = {
-        'bash',
-        'c',
-        'cpp',
-        'diff',
-        'go',
-        'html',
-        'lua',
-        'luadoc',
-        'markdown',
-        'markdown_inline',
-        'python',
-        'query',
-        'rust',
-        'typst',
-        'java',
-        'julia',
-        'toml',
-        'vim',
-        'vimdoc',
-      }
-      -- Tell Tree-sitter to use git instead of curl/tar
-      require('nvim-treesitter.install').prefer_git = true
-
-      require('nvim-treesitter').install(filetypes)
-
-      -- Delay the start to avoid the "Parser could not be created" error
-      vim.api.nvim_create_autocmd('FileType', {
-        pattern = filetypes,
-        callback = function(args) pcall(vim.treesitter.start, args.buf) end,
-      })
-    end,
-  },
 
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
