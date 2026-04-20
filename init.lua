@@ -119,6 +119,12 @@ vim.schedule(function() vim.o.clipboard = 'unnamedplus' end)
 -- Enable break indent
 vim.o.breakindent = true
 
+-- fallback tab
+vim.opt.expandtab = true
+vim.opt.shiftwidth = 3
+vim.opt.tabstop = 3
+vim.opt.softtabstop = 3
+
 -- Save undo history
 vim.o.undofile = true
 
@@ -223,10 +229,10 @@ vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower win
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
 -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
--- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
--- vim.keymap.set("n", "<C-S-l>", "<C-w>L", { desc = "Move window to the right" })
--- vim.keymap.set("n", "<C-S-j>", "<C-w>J", { desc = "Move window to the lower" })
--- vim.keymap.set("n", "<C-S-k>", "<C-w>K", { desc = "Move window to the upper" })
+vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
+vim.keymap.set("n", "<C-S-l>", "<C-w>L", { desc = "Move window to the right" })
+vim.keymap.set("n", "<C-S-j>", "<C-w>J", { desc = "Move window to the lower" })
+vim.keymap.set("n", "<C-S-k>", "<C-w>K", { desc = "Move window to the upper" })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
