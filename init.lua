@@ -944,18 +944,42 @@ require('lazy').setup({
 
   {
     'nvim-treesitter/nvim-treesitter',
+    build = ':TSUpdate',
     config = function()
       local filetypes = {
         'bash', 'c', 'cpp', 'diff', 'go', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline',
         'python', 'query', 'rust', 'typst', 'java', 'julia', 'toml', 'vim', 'vimdoc',
       }
+      
+      -- Tell treesitter to ensure these are installed
       require('nvim-treesitter').install(filetypes)
+
+      -- Safely attach Treesitter to buffers
       vim.api.nvim_create_autocmd('FileType', {
         pattern = filetypes,
-        callback = function() vim.treesitter.start() end,
+        callback = function(args)
+          -- pcall prevents the "Parser could not be created" error
+          -- from crashing Neovim while the parser is still compiling.
+          pcall(vim.treesitter.start, args.buf)
+        end,
       })
     end,
   },
+
+--  {
+--    'nvim-treesitter/nvim-treesitter',
+--    config = function()
+--      local filetypes = {
+--        'bash', 'c', 'cpp', 'diff', 'go', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline',
+--        'python', 'query', 'rust', 'typst', 'java', 'julia', 'toml', 'vim', 'vimdoc',
+--      }
+--      require('nvim-treesitter').install(filetypes)
+--      vim.api.nvim_create_autocmd('FileType', {
+--        pattern = filetypes,
+--        callback = function() vim.treesitter.start() end,
+--      })
+--    end,
+--  },
 
   --  { -- Highlight, edit, and navigate code
   --    'nvim-treesitter/nvim-treesitter',
