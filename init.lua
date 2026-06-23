@@ -935,8 +935,19 @@ require('lazy').setup({
       -- default behavior. For example, here we set the section for
       -- cursor location to LINE:COLUMN
       ---@diagnostic disable-next-line: duplicate-set-field
-      statusline.section_location = function() return '%2l:%-2v' end
+      --statusline.section_location = function() return '%2l:%-2v' end
+      statusline.section_location = function()
+        local location = '%2l:%-2v'
+        local mode = vim.fn.mode()
 
+        if mode == 'v' or mode == 'V' or mode == '\22' then
+          local wc = vim.fn.wordcount()
+
+          if wc.visual_words then
+            return tostring(wc.visual_words) .. ' words | ' .. location
+          end
+        end
+      end
       -- ... and there is more!
       --  Check out: https://github.com/nvim-mini/mini.nvim
     end,
