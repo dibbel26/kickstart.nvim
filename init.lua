@@ -105,7 +105,9 @@ vim.o.number = true
 -- vim.o.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
-vim.o.mouse = 'a'
+-- vim.o.mouse = 'a'
+vim.opt.mouse = 'n'
+vim.keymap.set('n', '<LeftMouse>', '<Nop>', { silent = true })
 
 -- Don't show the mode, since it's already in the status line
 vim.o.showmode = false
@@ -114,7 +116,7 @@ vim.o.showmode = false
 --  Schedule the setting after `UiEnter` because it can increase startup-time.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
-vim.schedule(function() vim.o.clipboard = 'unnamedplus' end)
+
 
 -- Enable break indent
 vim.o.breakindent = true
@@ -756,6 +758,7 @@ require('lazy').setup({
     opts = {
       dependencies_bin = { ['tinymist'] = 'tinymist' },
       open_cmd = 'firefox --new-window %s -P typst-preview --class typst-preview',
+      --open_cmd = 'bash -c "firefox --new-window %s -P typst-preview --class typst-preview"',
       port = 8009,
     },
     keys = {
@@ -791,6 +794,9 @@ require('lazy').setup({
       },
     },
     cmd = { "CsvViewEnable", "CsvViewDisable", "CsvViewToggle" },
+    keys = {
+      { '<leader>tc', '<cmd>CsvViewToggle<CR>', desc = '[T]oggle [C]SV View' },
+    },
   },
 
   { -- Autocompletion
@@ -916,6 +922,12 @@ require('lazy').setup({
         style = 'deep',
         term_colors = true,
         transparent = true,
+        colors = {
+         -- bg0 = '#000000', -- Main background
+         -- bg1 = '#000000', -- Sign column, folds, and line numbers
+          --bg2 = '#16181c', -- Floating windows like Telescope/Blink (matched to your Kitty tab bar)
+          --bg3 = '#1e2127', -- Statuslines and inactive elements
+        },
         code_style = {
           comments = 'none', -- 'none' disables the default italics
         },
