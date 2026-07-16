@@ -51,7 +51,7 @@ Kickstart Guide:
       - Tutor
       - <enter key>
 
-    (If you already know the Neovim basics, you can skip this step.)
+ --   (If you already know the Neovim basics, you can skip this step.)
 
   Once you've completed that, you can continue working through **AND READING** the rest
   of the kickstart init.lua.
@@ -756,10 +756,14 @@ require('lazy').setup({
     version = '1.*',
     ft = 'typst', -- Lazy load only when opening typst files
     opts = {
-      dependencies_bin = { ['tinymist'] = 'tinymist' },
-      open_cmd = 'firefox --new-window %s -P typst-preview --class typst-preview',
-      --open_cmd = 'bash -c "firefox --new-window %s -P typst-preview --class typst-preview"',
+      dependencies_bin = {
+        ['tinymist'] = 'tinymist',
+        ['websocat'] = 'websocat'
+      },
+      --open_cmd = 'firefox --new-window %s -P typst-preview --class typst-preview',
+      open_cmd = "sh -c 'setsid firefox --new-window %s -P typst-preview --class typst-preview >/dev/null 2>&1 &'",
       port = 8009,
+      debug = true,
     },
     keys = {
       { '<leader>tt', '<cmd>TypstPreviewToggle<CR>', desc = '[T]oggle [T]ypst Preview' },
