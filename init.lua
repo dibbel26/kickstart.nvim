@@ -616,25 +616,35 @@ require('lazy').setup({
         julials = {
           cmd = {
             'julia',
+            '--project=@nvim-lspconfig',
             '--startup-file=no',
             '--history-file=no',
             '-e',
-            [[
-              # load LanguageServer.jl form custom environment in ~/.julia/environments/nvim-lspconfig
-              ls_install_path = joinpath(get(DEPOT_PATH, 1, joinpath(homedir(), ".julia")), "environments", "nvim-lspconfig");
-              pushfirst!(LOAD_PATH, ls_install_path);
-              using LanguageServer;
-              using LanguageServer.SymbolServer;
-              depot_path = get(ENV, "JULIA_DEPOT_PATH", "");
-              project_path = dirname(something(Base.current_project(pwd()), Base.load_path_expand(LOAD_PATH[2]), pwd()));
-              server = LanguageServer.LanguageServerInstance(stdin, stdout, project_path, depot_path);
-              server.runlinter = true;
-              run(server);
-            ]],
+            'using LanguageServer; runserver()',
           },
           filetypes = { 'julia' },
-          root_markers = { 'Project.toml', 'JuliaProject.toml', '.git', '' },
+          root_markers = { 'Project.toml', 'JuliaProject.toml', '.git' },
         },
+--        julials = {
+--          cmd = {
+--            'julia',
+--            '--startup-file=no',
+--            '--history-file=no',
+--            '-e',
+--            [[
+--              # load LanguageServer.jl form custom environment in ~/.julia/environments/nvim-lspconfig
+--              ls_install_path = joinpath(get(DEPOT_PATH, 1, joinpath(homedir(), ".julia")), "environments", "nvim-lspconfig");
+--              pushfirst!(LOAD_PATH, ls_install_path);
+--              using LanguageServer;
+--              depot_path = get(ENV, "JULIA_DEPOT_PATH", "");
+--              project_path = dirname(something(Base.current_project(pwd()), Base.load_path_expand(LOAD_PATH[2]), pwd()));
+--              server = LanguageServer.LanguageServerInstance(stdin, stdout, project_path, depot_path);
+--              run(server);
+--            ]],
+--          },
+--          filetypes = { 'julia' },
+--          root_markers = { 'Project.toml', 'JuliaProject.toml', '.git', '' },
+--        },
         -- clangd = {},
         -- gopls = {},
         -- pyright = {},
